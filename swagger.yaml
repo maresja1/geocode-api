@@ -66,7 +66,7 @@ paths:
           content:
             application/json:
               schema:
-                $ref: '#/components/schemas/QueryResponse'
+                $ref: '#/components/schemas/SingleQueryMoreResults'
     post:
       summary: Single Query (POST)
       description: Resolves geocoding information for single query.
@@ -83,17 +83,57 @@ paths:
             application/json:
               schema:
                 $ref: '#/components/schemas/SingleQueryMoreResults'
+              example:
+              - queryId: f7bed7c3-93d8-4b61-8531-04caaad43d11
+                locationId: 55c9605b-2279-40cf-8271-5b01dc43af0f
+                country: cz
+                latitude: 50.04857267339925
+                longitude: 14.4161306290667
+                street: Podolská
+                streetNumber: "50"
+                districtNumber: "401"
+                town: Praha 4
+                district: Praha 4 - Podolí
+                zip: 147 00
+                confidence: 0.98
+                services:
+                - google
+              - queryId: f7bed7c3-93d8-4b61-8531-04caaad43d11
+                locationId: dc109c26-7767-4476-9cbb-70f7469bc6f6
+                country: cz
+                latitude: 50.04857267339925
+                longitude: 14.4161306290667
+                street: Podolská
+                districtNumber: "50"
+                town: Mšené-lázně
+                zip: 411 19
+                confidence: 0.1
+                services:
+                - mapy.cz
       x-codegen-request-body-name: body
   /geocode/batch:
     post:
       summary: Batch Query (POST)
       description: Resolves geocoding information for multiple queries.
       requestBody:
+        required: true
         content:
           application/json:
             schema:
               $ref: '#/components/schemas/BatchQuery'
-        required: true
+            example:
+            - queryId: f7bed7c3-93d8-4b61-8531-04caaad43d11
+              addressLine: Podolská 50
+              country: cz
+              latitude: 50.04857267339925
+              longitude: 14.4161306290667
+              street: Podolská
+              streetNumber: "50"
+              districtNumber: "401"
+              town: Praha 4
+              zip: 147 00
+            - queryId: 2c34e901-3601-44bf-b95f-2a232a44e1b4
+              addressLine: Křižíkova 5, Praha 8
       responses:
         "200":
           description: ""
@@ -101,91 +141,51 @@ paths:
             application/json:
               schema:
                 $ref: '#/components/schemas/BatchQueryResponse'
+              example:
+              - queryId: f7bed7c3-93d8-4b61-8531-04caaad43d11
+                locationId: 55c9605b-2279-40cf-8271-5b01dc43af0f
+                country: cz
+                latitude: 50.04857267339925
+                longitude: 14.4161306290667
+                street: Podolská
+                streetNumber: "50"
+                districtNumber: "401"
+                town: Praha 4
+                district: Praha 4 - Podolí
+                zip: 147 00
+                confidence: 0.98
+                services:
+                - google
+              - queryId: 2c34e901-3601-44bf-b95f-2a232a44e1b4
+                locationId: dc109c26-7767-4476-9cbb-70f7469bc6f6
+                country: cz
+                latitude: 50.090285890631414
+                longitude: 14.44010329319678
+                street: Křižíkova
+                streetNumber: "5"
+                districtNumber: "254"
+                town: Praha 8
+                district: Praha 8 - Karlín
+                zip: 186 00
+                confidence: 0.98
+                services:
+                - google
       x-codegen-request-body-name: body
 components:
   schemas:
     BatchQuery:
       title: multiple queries in a single batch
       type: array
-      example:
-      - queryId: f7bed7c3-93d8-4b61-8531-04caaad43d11
-        addressLine: Podolská 50
-        country: cz
-        latitude: 50.04857267339925
-        longitude: 14.4161306290667
-        street: Podolská
-        streetNumber: "50"
-        districtNumber: "401"
-        town: Praha 4
-        zip: 147 00
-      - queryId: 2c34e901-3601-44bf-b95f-2a232a44e1b4
-        addressLine: Křižíkova 5, Praha 8
       items:
         $ref: '#/components/schemas/SingleQuery'
     BatchQueryResponse:
       title: Batch Query Response
       type: array
-      example:
-      - queryId: f7bed7c3-93d8-4b61-8531-04caaad43d11
-        locationId: 55c9605b-2279-40cf-8271-5b01dc43af0f
-        country: cz
-        latitude: 50.04857267339925
-        longitude: 14.4161306290667
-        street: Podolská
-        streetNumber: "50"
-        districtNumber: "401"
-        town: Praha 4
-        district: Praha 4 - Podolí
-        zip: 147 00
-        confidence: 0.98
-        services:
-        - google
-      - queryId: 2c34e901-3601-44bf-b95f-2a232a44e1b4
-        locationId: dc109c26-7767-4476-9cbb-70f7469bc6f6
-        country: cz
-        latitude: 50.090285890631414
-        longitude: 14.44010329319678
-        street: Křižíkova
-        streetNumber: "5"
-        districtNumber: "254"
-        town: Praha 8
-        district: Praha 8 - Karlín
-        zip: 186 00
-        confidence: 0.98
-        services:
-        - google
       items:
         $ref: '#/components/schemas/QueryResponse'
     SingleQueryMoreResults:
       title: Single Query Response
       type: array
-      example:
-      - queryId: f7bed7c3-93d8-4b61-8531-04caaad43d11
-        locationId: 55c9605b-2279-40cf-8271-5b01dc43af0f
-        country: cz
-        latitude: 50.04857267339925
-        longitude: 14.4161306290667
-        street: Podolská
-        streetNumber: "50"
-        districtNumber: "401"
-        town: Praha 4
-        district: Praha 4 - Podolí
-        zip: 147 00
-        confidence: 0.98
-        services:
-        - google
-      - queryId: 2c34e901-3601-44bf-b95f-2a232a44e1b4
-        locationId: dc109c26-7767-4476-9cbb-70f7469bc6f6
-        country: cz
-        latitude: 50.04857267339925
-        longitude: 14.4161306290667
-        street: Podolská
-        districtNumber: "50"
-        town: Mšené-lázně
-        zip: 411 19
-        confidence: 0.1
-        services:
-        - mapy.cz
       items:
         $ref: '#/components/schemas/QueryResponse'
     SingleQuery:
