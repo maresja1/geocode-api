@@ -1,1 +1,1 @@
-== Swagger docs for geocoding API
+# Swagger docs for geocoding API
