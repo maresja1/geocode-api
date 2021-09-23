@@ -1,0 +1,215 @@
+swagger: '2.0'
+info:
+  version: '1.0'
+  title: "geocode"
+  description: A simple API allowing consumers to query for addresses and GPS coordinates.
+host: localhost:8080
+basePath: /
+schemes:
+- https
+consumes:
+- application/json
+produces:
+- application/json
+paths:
+  /geocode:
+    post:
+      description: >-
+        Resolves geocoding information for single query.
+      summary: Single Query (POST)
+      parameters:
+        - name: body
+          in: body
+          required: true
+          schema:
+            $ref: '#/definitions/SingleQuery'
+      responses:
+        200:
+          description: ''
+          schema:
+            $ref: '#/definitions/QueryResponse'
+    get:
+      description: >-
+        Resolves geocoding information for single query. 
+        With potential of HTTP caching through (If-Modified-Since or eTag)
+      summary: Single Query (GET)
+      parameters:
+      - name: queryId
+        in: query
+        required: true
+        type: string
+        x-example: f7bed7c3-93d8-4b61-8531-04caaad43d11
+      - name: addressLine
+        in: query
+        type: string
+        x-example: Křižíkova 5, Praha 8
+      - name: latitude
+        in: query
+        type: number
+        format: double
+        x-example: 50.04857267339925
+      - name: longitude
+        in: query
+        type: number
+        format: double
+        x-example: 14.4161306290667
+      - name: street
+        in: query
+        type: string
+        x-example: Podolská
+      - name: streetNumber
+        in: query
+        type: string
+        x-example: "50"
+      - name: districtNumber
+        in: query
+        type: string
+        x-example: "401"
+      - name: town
+        in: query
+        type: string
+        x-example: Praha 4
+      - name: zip
+        in: query
+        type: string
+        x-example: 147 00
+      responses:
+        200:
+          description: ''
+          schema:
+            $ref: '#/definitions/QueryResponse'
+  /geocode/batch:
+    post:
+      description: >-
+        Resolves geocoding information for multiple queries.
+      summary: Batch Query (POST)
+      parameters:
+        - name: body
+          in: body
+          required: true
+          schema:
+            $ref: '#/definitions/BatchQuery'
+      responses:
+        200:
+          description: ''
+          schema:
+            $ref: '#/definitions/BatchQueryResponse'
+definitions:
+  BatchQuery:
+    title: multiple queries in a single batch
+    type: array
+    items:
+      $ref: '#/definitions/SingleQuery'
+    example:
+      - queryId: f7bed7c3-93d8-4b61-8531-04caaad43d11
+        addressLine: Podolská 50
+        country: "cz"
+        latitude: 50.04857267339925
+        longitude: 14.4161306290667
+        street: Podolská
+        streetNumber: '50'
+        districtNumber: '401'
+        town: Praha 4
+        zip: 147 00
+      - queryId: 2c34e901-3601-44bf-b95f-2a232a44e1b4
+        addressLine: Křižíkova 5, Praha 8
+  BatchQueryResponse:
+    title: Batch Query Response
+    type: array
+    items:
+      $ref: '#/definitions/QueryResponse'
+    example:
+      - queryId: f7bed7c3-93d8-4b61-8531-04caaad43d11
+        locationId: 55c9605b-2279-40cf-8271-5b01dc43af0f
+        country: "cz"
+        latitude: 50.04857267339925
+        longitude: 14.4161306290667
+        street: Podolská
+        streetNumber: '50'
+        districtNumber: '401'
+        town: Praha 4
+        district: Praha 4 - Podolí
+        zip: 147 00
+      - queryId: 2c34e901-3601-44bf-b95f-2a232a44e1b4
+        locationId: dc109c26-7767-4476-9cbb-70f7469bc6f6
+        country: "cz"
+        latitude: 50.090285890631414
+        longitude: 14.44010329319678
+        street: Křižíkova
+        streetNumber: '5'
+        districtNumber: '254'
+        town: Praha 8
+        district: Praha 8 - Karlín
+        zip: 186 00
+  SingleQuery:
+    title: single geocoding query
+    type: object
+    properties:
+      queryId:
+        type: string
+        example: f7bed7c3-93d8-4b61-8531-04caaad43d11
+      addressLine:
+        type: string
+        example: "Podolská 50"
+      country:
+        type: string
+        example: "cz"
+      latitude:
+        type: number
+        format: double
+        example: 50.04857267339925
+      longitude:
+        type: number
+        format: double
+        example: 14.4161306290667
+      street:
+        type: string
+        example: Podolská
+      streetNumber:
+        type: string
+        example: "50"
+      districtNumber:
+        type: string
+        example: "401"
+      town:
+        type: string
+        example: Praha 4
+      zip:
+        type: string
+        example: 147 00
+  QueryResponse:
+    title: Query Response
+    type: object
+    properties:
+      locationId:
+        type: string
+        example: 55c9605b-2279-40cf-8271-5b01dc43af0f
+      queryId:
+        type: string
+        example: f7bed7c3-93d8-4b61-8531-04caaad43d11
+      country:
+        type: string
+        example: "cz"
+      latitude:
+        type: number
+        format: double
+        example: 50.04857267339925
+      longitude:
+        type: number
+        format: double
+        example: 14.4161306290667
+      street:
+        type: string
+        example: Podolská
+      streetNumber:
+        type: string
+        example: "50"
+      districtNumber:
+        type: string
+        example: "401"
+      town:
+        type: string
+        example: Praha 4
+      zip:
+        type: string
+        example: 147 00
